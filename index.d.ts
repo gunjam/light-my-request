@@ -57,6 +57,7 @@ declare namespace LightMyRequest {
     validate?: boolean
     payload?: InjectPayload
     server?: http.Server
+    express?: boolean
     cookies?: { [k: string]: string }
   }
 

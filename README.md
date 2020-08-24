@@ -131,6 +131,23 @@ The declaration file exports types for the following parts of the API:
 - `Request` - custom light-my-request `request` object interface. Extends Node.js `stream.Readable` type
 - `Response` - custom light-my-request `response` object interface. Extends Node.js `http.ServerResponse` type
 
+### Example with Express
+
+```javascript
+const http = require('http')
+const inject = require('light-my-request')
+const dispatch = function (req, res) {
+  const reply = 'Hello World'
+  res.writeHead(200, { 'Content-Type': 'text/plain', 'Content-Length': reply.length })
+  res.end(reply)
+}
+const server = http.createServer(dispatch)
+inject(dispatch, { method: 'get', url: '/', express: true }, (err, res) => {
+  console.log(res.payload)
+})
+```
+Note the `express: true` in the above example. This flag makes sure that we still get the correct behaviour with express framework.
+
 ## API
 
 #### `inject(dispatchFunc[, options, callback])`
@@ -160,6 +177,7 @@ Injects a fake request into an HTTP server.
   - `server` - Optional http server. It is used for binding the `dispatchFunc`.
   - `autoStart` - Automatically start the request as soon as the method
     is called. It is only valid when not passing a callback. Defaults to `true`.
+  - `express` - A boolean flag to enable working with express framework. By default express doesn't support request injection, this enforces.
 - `callback` - the callback function using the signature `function (err, res)` where:
   - `err` - error object
   - `res` - a response object where:
